@@ -46,16 +46,23 @@ if uploaded_image is not None:
             with col1:
                 top_left_x = st.number_input("Top-left X", 0.0, image.shape[1] - 1, 50.0)
                 top_left_y = st.number_input("Top-left Y", 0.0, image.shape[0] - 1, 50.0)
-                bottom_left_x = st.number_input("Bottom-left X", 0.0, image.shape[1], 50.0)
-                bottom_left_y = st.number_input("Bottom-left Y", 0.0, image.shape[0], 200.0)
+                bottom_left_x = st.number_input("Bottom-left X", 0.0, image.shape[1] - 1, 50.0)
+                bottom_left_y = st.number_input("Bottom-left Y", 0.0, image.shape[0] - 1, 200.0)
 
             with col2:
-                top_right_x = st.number_input("Top-right X", 0.0, image.shape[1], 200.0)
-                top_right_y = st.number_input("Top-right Y", 0.0, image.shape[0], 50.0)
-                bottom_right_x = st.number_input("Bottom-right X", 0.0, image.shape[1], 200.0)
-                bottom_right_y = st.number_input("Bottom-right Y", 0.0, image.shape[0], 200.0)
+                top_right_x = st.number_input("Top-right X", 0.0, image.shape[1] - 1, 200.0)
+                top_right_y = st.number_input("Top-right Y", 0.0, image.shape[0] - 1, 50.0)
+                bottom_right_x = st.number_input("Bottom-right X", 0.0, image.shape[1] - 1, 200.0)
+                bottom_right_y = st.number_input("Bottom-right Y", 0.0, image.shape[0] - 1, 200.0)
 
-            pts1 = np.float32([top_left_x, top_left_y, top_right_x, top_right_y, bottom_left_x, bottom_left_y, bottom_right_x, bottom_right_y])
+            # Form pairs of coordinates for pts1
+            pts1 = np.float32([
+                [top_left_x, top_left_y],
+                [top_right_x, top_right_y],
+                [bottom_left_x, bottom_left_y],
+                [bottom_right_x, bottom_right_y]
+            ])
+            
             pts2 = np.float32([[10, 10], [image.shape[1] - 10, 10], [10, image.shape[0] - 10], [image.shape[1] - 10, image.shape[0] - 10]])  # Destination points
             perspective_matrix = cv2.getPerspectiveTransform(pts1, pts2)
             transformed_image = cv2.warpPerspective(image, perspective_matrix, (image.shape[1], image.shape[0]))
