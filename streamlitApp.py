@@ -44,16 +44,16 @@ if uploaded_image is not None:
             col1, col2 = st.columns(2)  # Split the layout into two columns
 
             with col1:
-                top_left_x = st.number_input("Top-left X", 0.0, image.shape[1] - 1, 50.0, 1.0)  # Ensure that step is a float
-                top_left_y = st.number_input("Top-left Y", 0.0, image.shape[0] - 1, 50.0, 1.0)  # Ensure that step is a float
-                bottom_left_x = st.number_input("Bottom-left X", 0.0, image.shape[1] - 1, 50.0, 1.0)  # Ensure that step is a float
-                bottom_left_y = st.number_input("Bottom-left Y", 0.0, image.shape[0] - 1, 200.0, 1.0)  # Ensure that step is a float
+                top_left_x = st.number_input("Top-left X", 0.0, float(image.shape[1] - 1), 50.0, 1.0)  # Ensure that min_value, max_value, and step are all float
+                top_left_y = st.number_input("Top-left Y", 0.0, float(image.shape[0] - 1), 50.0, 1.0)  # Ensure that min_value, max_value, and step are all float
+                bottom_left_x = st.number_input("Bottom-left X", 0.0, float(image.shape[1] - 1), 50.0, 1.0)  # Ensure that min_value, max_value, and step are all float
+                bottom_left_y = st.number_input("Bottom-left Y", 0.0, float(image.shape[0] - 1), 200.0, 1.0)  # Ensure that min_value, max_value, and step are all float
 
             with col2:
-                top_right_x = st.number_input("Top-right X", 0.0, image.shape[1] - 1, 200.0, 1.0)  # Ensure that step is a float
-                top_right_y = st.number_input("Top-right Y", 0.0, image.shape[0] - 1, 50.0, 1.0)  # Ensure that step is a float
-                bottom_right_x = st.number_input("Bottom-right X", 0.0, image.shape[1] - 1, 200.0, 1.0)  # Ensure that step is a float
-                bottom_right_y = st.number_input("Bottom-right Y", 0.0, image.shape[0] - 1, 200.0, 1.0)  # Ensure that step is a float
+                top_right_x = st.number_input("Top-right X", 0.0, float(image.shape[1] - 1), 200.0, 1.0)  # Ensure that min_value, max_value, and step are all float
+                top_right_y = st.number_input("Top-right Y", 0.0, float(image.shape[0] - 1), 50.0, 1.0)  # Ensure that min_value, max_value, and step are all float
+                bottom_right_x = st.number_input("Bottom-right X", 0.0, float(image.shape[1] - 1), 200.0, 1.0)  # Ensure that min_value, max_value, and step are all float
+                bottom_right_y = st.number_input("Bottom-right Y", 0.0, float(image.shape[0] - 1), 200.0, 1.0)  # Ensure that min_value, max_value, and step are all float
 
             # Form pairs of coordinates for pts1
             pts1 = np.float32([
