@@ -8,7 +8,7 @@ st.title('Image Transformations')
 # Add an image upload option
 uploaded_image = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 if uploaded_image is not None:
-    image = cv2.imdecode(np.fromstring(uploaded_image.read(), np.uint8), cv2.IMREAD_COLOR)
+    image = cv2.imdecode(np.frombuffer(uploaded_image.read(), np.uint8), cv2.IMREAD_COLOR)
 else:
     st.write("Please upload an image.")
 
