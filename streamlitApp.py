@@ -15,35 +15,53 @@ else:
 # Transformation options in the sidebar
 transformation = st.sidebar.selectbox("Select Transformation", ["Original", "Translation", "Rotation", "Scaling", "Shearing", "Perspective", "Elastic Distortion"])
 
-# Apply and display the selected transformation
+# Apply and display the selected transformation with user input
 if uploaded_image is not None:
     if transformation == "Original":
         st.image(image, caption='Original Image', use_column_width=True, channels="BGR")
     else:
         if transformation == "Translation":
-            translation_matrix = np.float32([[1, 0, 100], [0, 1, 50]])  # Translate 100 pixels right and 50 pixels down
+            translation_x = st.number_input("X Translation (pixels)", -500, 500, 100)
+            translation_y = st.number_input("Y Translation (pixels)", -500, 500, 50)
+            translation_matrix = np.float32([[1, 0, translation_x], [0, 1, translation_y]])
             transformed_image = cv2.warpAffine(image, translation_matrix, (image.shape[1], image.shape[0]))
         elif transformation == "Rotation":
-            rotation_angle = 30  # Rotate 30 degrees
+            rotation_angle = st.number_input("Rotation Angle (degrees)", -180, 180, 30)
             rotation_matrix = cv2.getRotationMatrix2D((image.shape[1] / 2, image.shape[0] / 2), rotation_angle, 1)
             transformed_image = cv2.warpAffine(image, rotation_matrix, (image.shape[1], image.shape[0]))
         elif transformation == "Scaling":
-            scaling_matrix = np.float32([[1.2, 0, 0], [0, 0.8, 0]])  # Scale horizontally by 1.2 times and vertically by 0.8 times
+            scaling_x = st.number_input("X Scaling Factor", 0.1, 2.0, 1.2)
+            scaling_y = st.number_input("Y Scaling Factor", 0.1, 2.0, 0.8)
+            scaling_matrix = np.float32([[scaling_x, 0, 0], [0, scaling_y, 0]])
             transformed_image = cv2.warpAffine(image, scaling_matrix, (image.shape[1], image.shape[0]))
         elif transformation == "Shearing":
-            shearing_matrix = np.float32([[1, 0.2, 0], [0.2, 1, 0]])  # Apply shear transformation
+            shearing_x = st.number_input("X Shearing Factor", -1.0, 1.0, 0.2)
+            shearing_y = st.number_input("Y Shearing Factor", -1.0, 1.0, 0.2)
+            shearing_matrix = np.float32([[1, shearing_x, 0], [shearing_y, 1, 0]])
             transformed_image = cv2.warpAffine(image, shearing_matrix, (image.shape[1], image.shape[0]))
         elif transformation == "Perspective":
-            pts1 = np.float32([[50, 50], [200, 50], [50, 200], [200, 200]])  # Source points
-            pts2 = np.float32([[10, 100], [200, 50], [100, 250], [200, 200]])  # Destination points
+            st.write("Specify the coordinates of four corners for perspective transformation:")
+            pts1 = np.float32([
+                st.beta_columns(2)[0].number_input("Top-left X", 0.0, image.shape[1], 50.0),
+                st.beta_columns(2)[0].number_input("Top-left Y", 0.0, image.shape[0], 50.0),
+                st.beta_columns(2)[1].number_input("Top-right X", 0.0, image.shape[1], 200.0),
+                st.beta_columns(2)[1].number_input("Top-right Y", 0.0, image.shape[0], 50.0),
+                st.beta_columns(2)[0].number_input("Bottom-left X", 0.0, image.shape[1], 50.0),
+                st.beta_columns(2)[0].number_input("Bottom-left Y", 0.0, image.shape[0], 200.0),
+                st.beta_columns(2)[1].number_input("Bottom-right X", 0.0, image.shape[1], 200.0),
+                st.beta_columns(2)[1].number_input("Bottom-right Y", 0.0, image.shape[0], 200.0)
+            ])
+            pts2 = np.float32([[10, 10], [image.shape[1] - 10, 10], [10, image.shape[0] - 10], [image.shape[1] - 10, image.shape[0] - 10]])  # Destination points
             perspective_matrix = cv2.getPerspectiveTransform(pts1, pts2)
             transformed_image = cv2.warpPerspective(image, perspective_matrix, (image.shape[1], image.shape[0]))
         elif transformation == "Elastic Distortion":
             rows, cols, _ = image.shape
             grid_size = 20
             x, y = np.meshgrid(np.linspace(0, cols, grid_size), np.linspace(0, rows, grid_size))
-            x_displace = 10 * np.sin(2 * np.pi * x / cols)
-            y_displace = 10 * np.sin(2 * np.pi * y / rows)
+            x_displace = st.slider("X Displacement (pixels)", -10, 10, 0)
+            y_displace = st.slider("Y Displacement (pixels)", -10, 10, 0)
+            x_displace = x_displace * np.sin(2 * np.pi * x / cols)
+            y_displace = y_displace * np.sin(2 * np.pi * y / rows)
             map_x = (x + x_displace).astype(np.float32)
             map_y = (y + y_displace).astype(np.float32)
             transformed_image = cv2.remap(image, map_x, map_y, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
