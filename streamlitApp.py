@@ -44,8 +44,8 @@ if uploaded_image is not None:
             col1, col2 = st.columns(2)  # Split the layout into two columns
 
             with col1:
-                top_left_x = st.number_input("Top-left X", 0.0, image.shape[1], 50.0)
-                top_left_y = st.number_input("Top-left Y", 0.0, image.shape[0], 50.0)
+                top_left_x = st.number_input("Top-left X", 0.0, image.shape[1] - 1, 50.0)
+                top_left_y = st.number_input("Top-left Y", 0.0, image.shape[0] - 1, 50.0)
                 bottom_left_x = st.number_input("Bottom-left X", 0.0, image.shape[1], 50.0)
                 bottom_left_y = st.number_input("Bottom-left Y", 0.0, image.shape[0], 200.0)
 
